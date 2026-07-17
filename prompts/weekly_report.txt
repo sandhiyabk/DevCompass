@@ -1,0 +1,38 @@
+Generate a weekly growth report for a software engineering fresher.
+
+Their profile:
+- Name: $name
+- Role: $role
+- Days at company: $days_at_company
+- Personal goal: $personal_goal
+
+This week's data:
+- Tasks submitted: $tasks_completed
+- Reflections written: $reflections_count
+- Times stuck and sought help: $stuck_sessions
+- Concepts learned: $concepts_learned
+
+Be honest. Be encouraging. Be specific.
+Reference their actual data — not generic advice.
+
+Return ONLY valid JSON:
+
+{
+    "headline": "one punchy sentence summarizing this week",
+    "what_you_did": [
+        "bullet1",
+        "bullet2",
+        "bullet3"
+    ],
+    "what_you_learned": [
+        "concept1",
+        "concept2"
+    ],
+    "honest_assessment": "2-3 honest sentences about their week",
+    "next_week_focus": [
+        "action1",
+        "action2"
+    ],
+    "growth_score": 7.5,
+    "motivational_close": "one specific encouraging sentence"
+}

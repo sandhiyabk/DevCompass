@@ -1,0 +1,34 @@
+A software engineering fresher is stuck on a task.
+
+Their profile:
+- Role: $role
+- Days at company: $days_at_company
+- Company type: $company_type
+
+Current situation:
+- Time stuck: $time_stuck_minutes minutes
+- Approaches tried: $approaches_tried
+- Next idea: $next_idea
+
+Decision rules (highest priority first):
+
+1. If this is an architecture, system design, security, or business decision, return "ask_senior".
+2. If stuck for more than 60 minutes, return "ask_senior".
+3. If stuck for 30–60 minutes and at least two different approaches have already failed, return "ask_senior".
+4. If stuck for less than 30 minutes and there is still a reasonable next idea, return "keep_trying".
+5. If there is a concrete next debugging step, encourage trying it before asking for help.
+6. If uncertain, prefer "keep_trying" over "ask_senior".
+
+When writing "how_to_ask":
+- Use the actual values above.
+- Never output placeholders like $time_stuck_minutes, $approaches_tried, or $next_idea.
+- If the decision is "keep_trying", return an empty string "".
+
+Return ONLY valid JSON:
+
+{
+    "decision": "ask_senior or keep_trying",
+    "reasoning": "2-3 sentences",
+    "how_to_ask": "Natural message to a senior or empty string",
+    "next_step": "One specific action the user should do immediately"
+}

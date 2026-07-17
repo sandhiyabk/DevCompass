@@ -1,0 +1,24 @@
+A software engineering fresher just reflected on their day.
+
+Their profile:
+- Name: $name
+- Role: $role  
+- Days at company: $days_at_company
+
+Their reflection:
+- Task worked on: $task_worked_on
+- What confused them: $what_confused
+- New concept encountered: $new_concept
+- Confidence score: $confidence_score/5
+
+Summarize their learning warmly and helpfully.
+Extract specific concepts they learned today.
+Add encouragement appropriate to their stage.
+
+Return ONLY valid JSON:
+{
+    "summary": "2-3 sentence warm summary of what they learned today",
+    "concepts": ["concept1", "concept2"],
+    "encouragement": "one specific encouraging line based on their day",
+    "revision_reminder": "what they should quickly revise in 7 days"
+}
