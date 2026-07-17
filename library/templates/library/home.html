@@ -1,0 +1,52 @@
+{% extends "library/base.html" %}
+
+{% block title %}Home - Library Management{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Library Management System</h1>
+  <p>Manage your authors and books efficiently.</p>
+</section>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-number">{{ total_books }}</span>
+    <span class="stat-label">Total Books</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-number">{{ total_authors }}</span>
+    <span class="stat-label">Total Authors</span>
+  </div>
+</div>
+
+<div class="quick-actions">
+  <a href="{% url 'library:author_create' %}" class="btn btn-primary">Add Author</a>
+  <a href="{% url 'library:book_create' %}" class="btn btn-primary">Add Book</a>
+</div>
+
+{% if recent_books %}
+<section class="recent-section">
+  <h2>Recently Added Books</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in recent_books %}
+      <tr>
+        <td><a href="{% url 'library:book_detail' pk=book.pk %}">{{ book.title }}</a></td>
+        <td>{{ book.author.full_name }}</td>
+        <td>{{ book.publication_year }}</td>
+        <td>{{ book.get_category_display }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

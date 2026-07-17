@@ -1,0 +1,57 @@
+{% extends "library/base.html" %}
+
+{% block title %}Books - Library Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Books</h1>
+  <a href="{% url 'library:book_create' %}" class="btn btn-primary">Add Book</a>
+</div>
+
+<div class="toolbar">
+  <form class="search-bar" method="get" action="{% url 'library:book_list' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search books by title or author...">
+    <input type="hidden" name="sort" value="{{ current_sort }}">
+    <button type="submit" class="btn btn-secondary">Search</button>
+    {% if query %}
+      <a href="{% url 'library:book_list' %}{% if current_sort %}?sort={{ current_sort }}{% endif %}" class="btn btn-text">Clear</a>
+    {% endif %}
+  </form>
+
+  <div class="sort-options">
+    <span>Sort by:</span>
+    <a href="?q={{ query }}&sort=title" class="btn btn-sm {% if current_sort == 'title' %}btn-active{% else %}btn-outline{% endif %}">Title</a>
+    <a href="?q={{ query }}&sort=year" class="btn btn-sm {% if current_sort == 'year' %}btn-active{% else %}btn-outline{% endif %}">Year</a>
+    <a href="?q={{ query }}&sort=author" class="btn btn-sm {% if current_sort == 'author' %}btn-active{% else %}btn-outline{% endif %}">Author</a>
+    {% if current_sort %}
+      <a href="?q={{ query }}" class="btn btn-text btn-sm">Reset</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if books %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>ISBN</th>
+      <th>Year</th>
+      <th>Category</th>
+      <th>Copies</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="book-list-body">
+    {% for book in books %}
+      {% include "library/partials/book_row.html" %}
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <div class="empty-state">
+    <p>No books found.</p>
+    <a href="{% url 'library:book_create' %}" class="btn btn-primary">Add Your First Book</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+<tr id="book-{{ book.pk }}">
+  <td><a href="{% url 'library:book_detail' pk=book.pk %}">{{ book.title }}</a></td>
+  <td>{{ book.author.full_name }}</td>
+  <td>{{ book.isbn }}</td>
+  <td>{{ book.publication_year }}</td>
+  <td>{{ book.get_category_display }}</td>
+  <td>{{ book.available_copies }}</td>
+  <td class="actions-cell">
+    <a href="{% url 'library:book_edit' pk=book.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+    <a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-sm btn-danger">Delete</a>
+  </td>
+</tr>

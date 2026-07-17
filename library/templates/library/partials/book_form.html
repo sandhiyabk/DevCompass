@@ -1,0 +1,26 @@
+<div class="form-card">
+  <form method="post"
+        hx-post="{% if book %}{% url 'library:book_edit' pk=book.pk %}{% else %}{% url 'library:book_create' %}{% endif %}"
+        hx-target="closest .form-card"
+        hx-swap="outerHTML"
+        novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+      <div class="form-errors">
+        {% for error in field.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{% if book %}Update Book{% else %}Add Book{% endif %}</button>
+      <a href="{% url 'library:book_list' %}" class="btn btn-text">Cancel</a>
+    </div>
+  </form>
+</div>

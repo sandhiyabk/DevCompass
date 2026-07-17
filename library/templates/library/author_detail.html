@@ -1,0 +1,62 @@
+{% extends "library/base.html" %}
+
+{% block title %}{{ author.full_name }} - Library Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ author.full_name }}</h1>
+  <div class="header-actions">
+    <a href="{% url 'library:author_edit' pk=author.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'library:author_delete' pk=author.pk %}" class="btn btn-danger">Delete</a>
+  </div>
+</div>
+
+<div class="detail-card">
+  <div class="detail-row">
+    <strong>Email:</strong>
+    <span>{{ author.email }}</span>
+  </div>
+  <div class="detail-row">
+    <strong>Country:</strong>
+    <span>{{ author.country|default:"N/A" }}</span>
+  </div>
+  <div class="detail-row">
+    <strong>Added:</strong>
+    <span>{{ author.created_at|date:"M d, Y" }}</span>
+  </div>
+</div>
+
+<section class="related-section">
+  <h2>Books by {{ author.full_name }}</h2>
+  {% if author.books.all %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Year</th>
+        <th>Category</th>
+        <th>Copies</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in author.books.all %}
+      <tr>
+        <td><a href="{% url 'library:book_detail' pk=book.pk %}">{{ book.title }}</a></td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.publication_year }}</td>
+        <td>{{ book.get_category_display }}</td>
+        <td>{{ book.available_copies }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <p>No books by this author yet.</p>
+  </div>
+  {% endif %}
+</section>
+
+<a href="{% url 'library:author_list' %}" class="btn btn-text">&larr; Back to Authors</a>
+{% endblock %}

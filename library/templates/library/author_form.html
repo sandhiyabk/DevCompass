@@ -1,0 +1,32 @@
+{% extends "library/base.html" %}
+
+{% block title %}{% if editing %}Edit Author{% else %}Add Author{% endif %} - Library Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% if editing %}Edit Author: {{ author.full_name }}{% else %}Add New Author{% endif %}</h1>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+      <div class="form-errors">
+        {% for error in field.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update Author{% else %}Add Author{% endif %}</button>
+      <a href="{% url 'library:author_list' %}" class="btn btn-text">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "library/base.html" %}
+
+{% block title %}Page Not Found - Library Management{% endblock %}
+
+{% block content %}
+<div class="error-page">
+  <h1>404</h1>
+  <p>Page not found.</p>
+  <a href="{% url 'library:home' %}" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

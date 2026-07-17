@@ -1,0 +1,10 @@
+<tr id="author-{{ author.pk }}">
+  <td><a href="{% url 'library:author_detail' pk=author.pk %}">{{ author.full_name }}</a></td>
+  <td>{{ author.email }}</td>
+  <td>{{ author.country|default:"N/A" }}</td>
+  <td>{{ author.books.count }}</td>
+  <td class="actions-cell">
+    <a href="{% url 'library:author_edit' pk=author.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+    <a href="{% url 'library:author_delete' pk=author.pk %}" class="btn btn-sm btn-danger">Delete</a>
+  </td>
+</tr>
