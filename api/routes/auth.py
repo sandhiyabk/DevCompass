@@ -99,23 +99,30 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
         except ValueError:
             joined_date = date.today()
 
-    user = crud.create_user(db, {
-        "name": data.name,
-        "email": data.email,
-        "password": data.password,
-        "company_name": data.company_name,
-        "company_type": data.company_type,
-        "role": data.role,
-        "tech_stack": data.tech_stack,
-        "personal_goal": data.personal_goal,
-        "joined_company_date": joined_date
-    })
+    try:
+        user = crud.create_user(db, {
+            "name": data.name,
+            "email": data.email,
+            "password": data.password,
+            "company_name": data.company_name,
+            "company_type": data.company_type,
+            "role": data.role,
+            "tech_stack": data.tech_stack,
+            "personal_goal": data.personal_goal,
+            "joined_company_date": joined_date
+        })
 
-    if data.skills:
-        crud.add_user_skills(
-            db, str(user.id),
-            [{"name": s.name, "proficiency": s.proficiency}
-             for s in data.skills]
+        if data.skills:
+            crud.add_user_skills(
+                db, str(user.id),
+                [{"name": s.name, "proficiency": s.proficiency}
+                 for s in data.skills]
+            )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Registration failed: {str(e)}"
         )
 
     token = create_token(str(user.id))
@@ -141,7 +148,14 @@ def login(
             detail="Incorrect email or password"
         )
 
-    token = create_token(str(user.id))
+    try:
+        token = create_token(str(user.id))
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Login failed: {str(e)}"
+        )
     return Token(
         access_token=token,
         token_type="bearer",
