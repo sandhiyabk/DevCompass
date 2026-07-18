@@ -37,7 +37,8 @@ with tab1:
             try:
                 response = requests.post(
                     f"{API_URL}/auth/login",
-                    data={"username": email, "password": password}
+                    data={"username": email, "password": password},
+                    timeout=30
                 )
                 if response.status_code == 200:
                     data = response.json()
@@ -48,7 +49,13 @@ with tab1:
                     st.success(f"Welcome back, {data['user_name']}!")
                     st.switch_page("pages/1_Daily_Task.py")
                 else:
-                    st.error("Invalid email or password")
+                    try:
+                        detail = response.json().get("detail", "Invalid credentials")
+                    except Exception:
+                        detail = f"Server error (status {response.status_code})"
+                    st.error(detail)
+            except requests.exceptions.ConnectionError:
+                st.error("Cannot reach API. The server may be waking up — retry in 30 seconds.")
             except Exception as e:
                 st.error(f"Cannot connect to API: {str(e)}")
 
@@ -125,7 +132,8 @@ with tab2:
                 }
                 response = requests.post(
                     f"{API_URL}/auth/register",
-                    json=payload
+                    json=payload,
+                    timeout=30
                 )
                 if response.status_code == 200:
                     data = response.json()
@@ -136,7 +144,13 @@ with tab2:
                     st.success("Profile created! Welcome to DevCompass.")
                     st.switch_page("pages/1_Daily_Task.py")
                 else:
-                    st.error(response.json().get("detail", "Error"))
+                    try:
+                        detail = response.json().get("detail", "Registration failed")
+                    except Exception:
+                        detail = f"Server error (status {response.status_code})"
+                    st.error(detail)
+            except requests.exceptions.ConnectionError:
+                st.error("Cannot reach API. The server may be waking up — retry in 30 seconds.")
             except Exception as e:
                 st.error(f"Cannot connect to API: {str(e)}")
         else:
