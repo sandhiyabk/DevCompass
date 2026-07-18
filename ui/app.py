@@ -52,7 +52,7 @@ with tab1:
                     try:
                         detail = response.json().get("detail", "Invalid credentials")
                     except Exception:
-                        detail = f"Server error (status {response.status_code})"
+                        detail = response.text[:500] or f"Empty response (status {response.status_code})"
                     st.error(detail)
             except requests.exceptions.ConnectionError:
                 st.error("Cannot reach API. The server may be waking up — retry in 30 seconds.")
@@ -147,7 +147,7 @@ with tab2:
                     try:
                         detail = response.json().get("detail", "Registration failed")
                     except Exception:
-                        detail = f"Server error (status {response.status_code})"
+                        detail = response.text[:500] or f"Empty response (status {response.status_code})"
                     st.error(detail)
             except requests.exceptions.ConnectionError:
                 st.error("Cannot reach API. The server may be waking up — retry in 30 seconds.")

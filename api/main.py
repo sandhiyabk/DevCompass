@@ -1,7 +1,9 @@
 # api/main.py
 
-from fastapi import FastAPI
+import traceback
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
@@ -21,7 +23,16 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# Include routes
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Server error: {str(exc)}"}
+    )
+
+
 app.include_router(auth.router)
 app.include_router(tasks.router)
 app.include_router(stuck.router)
@@ -29,13 +40,11 @@ app.include_router(reflections.router)
 app.include_router(reports.router)
 
 
-# Startup
 @app.on_event("startup")
 def startup():
     init_db()
     print("DevCompass API started")
 
-    # Weekly report scheduler — every Sunday 8 PM
     scheduler = BackgroundScheduler()
 
     def run_weekly_reports():
@@ -64,6 +73,21 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+
+@app.get("/test-db")
+def test_db():
+    try:
+        from sqlalchemy import text
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        db.close()
+        return {"db": "connected"}
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"db": "failed", "error": str(e)}
+        )
 
 
 if __name__ == "__main__":
