@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(
 import streamlit as st
 import requests
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = os.getenv("API_URL") or st.secrets.get("API_URL", "http://localhost:8000")
 
 if not st.session_state.get("logged_in"):
     st.warning("Please login first")

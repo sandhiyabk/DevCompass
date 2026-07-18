@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import requests
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = os.getenv("API_URL") or st.secrets.get("API_URL", "http://localhost:8000")
 
 st.set_page_config(
     page_title="DevCompass",
