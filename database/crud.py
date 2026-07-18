@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from datetime import date, timedelta
 from typing import List, Optional
-from passlib.context import CryptContext
+import bcrypt
 import uuid
 
 from database.models import (
@@ -13,14 +13,13 @@ from database.models import (
     KnowledgeBase, WeeklyReport
 )
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # ─── USER CRUD ─────────────────────────────────────────────
 
 def create_user(db: Session, data: dict) -> User:
-    password = data["password"][:72]
-    hashed = pwd_context.hash(password)
+    password_bytes = data["password"].encode("utf-8")[:72]
+    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("utf-8")
     user = User(
         name=data["name"],
         email=data["email"],
@@ -51,7 +50,10 @@ def get_user_by_id(
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(
+        plain.encode("utf-8")[:72],
+        hashed.encode("utf-8")
+    )
 
 
 def get_all_users(db: Session) -> List[User]:
